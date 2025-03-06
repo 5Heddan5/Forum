@@ -14,10 +14,11 @@ export const createThread = (req, res) => {
       message: "Thread added successfully",
       threadId: result.lastInsertRowid,
     });
-    
+
   } catch (err) {
     res
       .status(500)
       .json({ message: "Failed to add thread", error: err.message });
   }
 };
+

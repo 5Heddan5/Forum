@@ -1,49 +1,29 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import CustomDatePicker from "./DatePicker"; // Importera rätt path till CustomDatePicker
+import CustomDatePicker from "./DatePicker";
+import { addThread } from "../API/AddThread";
 
 export default function AddThreadForm() {
   const navigate = useNavigate();
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [author, setAuthor] = useState("");
-  const [date, setDate] = useState(""); // Initialt tomt datum
+  const [date, setDate] = useState("");
 
-  // Hantera formulärinlämning
   const handleAddThread = async (e) => {
     e.preventDefault();
 
-    const newThread = {
-      title,
-      content,
-      author,
-      date,
-    };
-
-    console.log("Sending data:", newThread); // Logga data som skickas
+    const newThread = { title, content, author, date };
+    console.log("Sending data:", newThread);
 
     try {
-      const response = await fetch("http://localhost:3000/threads/add", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(newThread),
-      });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        console.log("Thread added:", data);
-        navigate("/"); // Navigera tillbaka till startsidan eller en annan sida
-      } else {
-        console.error("Error adding thread:", data.message);
-      }
+      await addThread(newThread);
+      console.log("Thread added successfully");
+      navigate("/");
     } catch (error) {
-      console.error("Error in POST request:", error);
+      console.error("Error adding thread:", error.message);
     }
   };
-
 
   return (
     <form onSubmit={handleAddThread}>
@@ -64,7 +44,6 @@ export default function AddThreadForm() {
         value={author}
         onChange={(e) => setAuthor(e.target.value)}
       />
-      {/* Använd CustomDatePicker för att välja datum */}
       <CustomDatePicker onDateChange={(newDate) => setDate(newDate)} />
       <div className="button-group">
         <button type="submit">Submit</button>
