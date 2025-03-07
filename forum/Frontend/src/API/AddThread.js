@@ -1,5 +1,13 @@
+// API/AddThread.js
 const API_URL = "http://localhost:3000/threads";
 
+// Funktion för att hämta alla trådar
+export const getThreads = async () => {
+  const response = await fetch(API_URL);
+  return response.json();
+};
+
+// Funktion för att lägga till tråd (samma som tidigare)
 export const addThread = async (threadData) => {
   try {
     const response = await fetch(`${API_URL}/add`, {
@@ -20,9 +28,3 @@ export const addThread = async (threadData) => {
     throw error;
   }
 };
-
-// Hämta alla trådar
-export const getThreads = async () => {
-  const response = await fetch(API_URL);
-  return response.json();
-}
