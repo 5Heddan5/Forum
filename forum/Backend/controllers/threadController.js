@@ -1,6 +1,6 @@
-import db from "../db.js"; 
+import db from "../db.js"; // Databasanslutning
 
-// Skapa en ny tråd
+// Skapa en ny tråd (POST)
 export const createThread = (req, res) => {
   const { title, content, author, date } = req.body;
 
@@ -14,7 +14,6 @@ export const createThread = (req, res) => {
       message: "Thread added successfully",
       threadId: result.lastInsertRowid,
     });
-
   } catch (err) {
     res
       .status(500)
@@ -22,3 +21,14 @@ export const createThread = (req, res) => {
   }
 };
 
+// Hämta alla trådar (GET)
+export const getAllThreads = (req, res) => {
+  try {
+    const threads = db.prepare("SELECT * FROM Threads").all();
+    res.json(threads);
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Failed to get threads", error: error.message });
+  }
+};

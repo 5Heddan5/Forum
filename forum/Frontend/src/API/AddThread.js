@@ -20,3 +20,9 @@ export const addThread = async (threadData) => {
     throw error;
   }
 };
+
+// Hämta alla trådar
+export const getThreads = async () => {
+  const response = await fetch(API_URL);
+  return response.json();
+}
