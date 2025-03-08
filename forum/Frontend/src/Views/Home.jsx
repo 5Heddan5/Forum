@@ -1,67 +1,28 @@
-// Frontend/src/Views/Home.jsx
-import React, { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { getThreads } from "../API/AddThread"; // För att hämta alla trådar om ingen sökning görs
-import Searchbar from "../components/Searchbar"; // Sökfältet
+import { getAllThreads } from "../API";
+import ThreadItem from "../components/ThreadItem";
 
-export default function Home() {
-  const [threads, setThreads] = useState([]);
-  const [searchInput, setSearchInput] = useState(""); // Hantera sökinput
-  const [filteredThreads, setFilteredThreads] = useState([]); // För filtrerade trådar
+export default function HomeView() {
+  const [threads, setThread] = useState([]);
 
   useEffect(() => {
-    // Hämta alla trådar när komponenten laddas
-    getThreads().then(setThreads);
-  }, []);
-
-  useEffect(() => {
-    if (searchInput) {
-      // Anropa sök-API när användaren skriver något i sökfältet
-      fetch(`http://localhost:3000/threads/search?q=${searchInput}`)
-        .then((response) => response.json())
-        .then((data) => setFilteredThreads(data))
-        .catch((error) =>
-          console.error("Error fetching search results:", error)
-        );
-    } else {
-      // Om inget sökord är angivet, visa alla trådar
-      setFilteredThreads(threads);
-    }
-  }, [searchInput, threads]);
-
-  const handleSearchChange = (e) => {
-    setSearchInput(e.target.value); // Uppdatera sökinput när användaren skriver
-  };
+    // Fetch tasks when component mounts
+    getAllThreads().then(setThread);
+  }, []); // Empty dependency array ensures it runs only once
 
   return (
-    <div>
-      <h1>Diskussionsforum</h1>
-      <h3>Dela idéer och diskutera olika ämnen med andra användare</h3>
-      <Link to="/add-thread">+ Ny Tråd</Link>
-
-      <Searchbar
-        searchInput={searchInput}
-        handleSearchChange={handleSearchChange}
-      />
-
+    <div className="task-container">
+      <div className="header">
+        <h1 className="header-title">My To-Do List</h1>
+        <Link className="add-task-btn" to="/add-thread">
+          +
+        </Link>
+      </div>
       <ul>
-        {filteredThreads.length > 0 ? (
-          filteredThreads.map((thread, index) => (
-            <li key={index} className="thread-item">
-              <h3>{thread.title}</h3>
-              <p>{thread.content}</p>
-              <p>
-                <strong>Author:</strong> {thread.author}
-              </p>
-              <p>
-                <strong>Date:</strong>{" "}
-                {new Date(thread.date).toLocaleDateString()}
-              </p>
-            </li>
-          ))
-        ) : (
-          <p>Inga trådar hittades</p>
-        )}
+        {threads.map((thread) => (
+          <ThreadItem key={thread.id} thread={thread}  />
+        ))}
       </ul>
     </div>
   );
