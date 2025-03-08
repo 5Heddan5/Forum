@@ -4,8 +4,8 @@ import threadRoutes from "./routes/threadRoutes.js"; // Importera trådrutter
 
 const app = express();
 
-app.use(express.json()); 
-app.use(cors()); 
+app.use(express.json());
+app.use(cors());
 
 app.use("/threads", threadRoutes); // Använd trådrutter
 

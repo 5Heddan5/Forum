@@ -27,7 +27,7 @@ export default function Home() {
       // Om inget sökord är angivet, visa alla trådar
       setFilteredThreads(threads);
     }
-  }, [searchInput, threads]); 
+  }, [searchInput, threads]);
 
   const handleSearchChange = (e) => {
     setSearchInput(e.target.value); // Uppdatera sökinput när användaren skriver

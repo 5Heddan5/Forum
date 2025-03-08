@@ -1,7 +1,7 @@
-import betterSqlite3 from "better-sqlite3";
-import path from "path";
+import Database from "better-sqlite3";
 
-// Skapa och exportera en synkron databasanslutning
-const db = betterSqlite3(path.join(process.cwd(), "Forum.db"));
+// Skapa en databas som heter "forum.db"
+const db = new Database("./Forum.db", { verbose: console.log });
 
+// Exportera db för användning i andra filer
 export default db;
