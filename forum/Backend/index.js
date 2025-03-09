@@ -13,7 +13,10 @@ app.use(cors());
 db.prepare(
   `CREATE TABLE IF NOT EXISTS thread (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    title TEXT NOT NULL
+    title TEXT NOT NULL,
+    content TEXT NOT NULL,
+    author TEXT NOT NULL,
+    date TEXT NOT NULL
   )`
 ).run();
 
@@ -44,16 +47,22 @@ app.put("/threads/:id", (req, res) => {
 
 // Route to add a task
 app.post("/threads", (req, res) => {
-  const { title } = req.body;
+  const { title, content, author, date } = req.body;
 
   // Kontrollera om titeln är tom
-  if (!title || title.trim() === "") {
-    return res.status(400).json({ error: "Thread cannot be empty" });
+  if (!title?.trim() || !content?.trim() || !author?.trim() || !date?.trim()) {
+    return res
+      .status(400)
+      .json({
+        error: "All fields (title, content, author, date) are required",
+      });
   }
 
   // Lägg till den nya tråden i databasen
-  const stmt = db.prepare("INSERT INTO thread (title) VALUES (?)");
-  const result = stmt.run(title);
+  const stmt = db.prepare(
+    "INSERT INTO thread (title, content, author, date) VALUES (?, ?, ?, ?)"
+  );
+  const result = stmt.run(title, content, author, date);
 
   // Hämta den nyligen tillagda tråden (inklusive dess ID)
   const newThread = db
@@ -62,7 +71,6 @@ app.post("/threads", (req, res) => {
 
   res.status(201).json(newThread); // Returnera den nya tråden med status 201 (created)
 });
-
 
 // Route to delete a task by ID
 app.delete("/threads/:id", (req, res) => {

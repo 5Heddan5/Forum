@@ -20,7 +20,6 @@ export const addThread = async (newThread) => {
   return await response.json();
 };
 
-
 export const deleteThread = async (id) => {
   await fetch(`${API_URL}/${id}`, { method: "DELETE" });
 };

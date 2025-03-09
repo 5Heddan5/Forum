@@ -1,12 +1,14 @@
 import React from "react";
 
-const CustomDatePicker = ({ onDateChange }) => {
-  const handleChange = (e) => {
-    const date = e.target.value; // Exempel: '2025-03-06'
-    onDateChange(date); // Skicka tillbaka det valda datumet
-  };
-
-  return <input type="date" onChange={handleChange} />;
+const CustomDatePicker = ({ onDateChange, value }) => {
+  return (
+    <input
+      type="date"
+      value={value}
+      onChange={(e) => onDateChange(e.target.value)}
+      required
+    />
+  );
 };
 
 export default CustomDatePicker;
