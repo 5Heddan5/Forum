@@ -1,9 +1,5 @@
 const API_URL = "http://localhost:3000/threads"; // Local API URL
 
-export const getAllThreads = async () => {
-  const response = await fetch(API_URL);
-  return response.json();
-};
 export const addThread = async (newThread) => {
   const response = await fetch("http://localhost:3000/threads", {
     method: "POST",
@@ -19,9 +15,9 @@ export const addThread = async (newThread) => {
 
   return await response.json();
 };
-
-export const deleteThread = async (id) => {
-  await fetch(`${API_URL}/${id}`, { method: "DELETE" });
+export const getAllThreads = async () => {
+  const response = await fetch(API_URL);
+  return response.json();
 };
 
 export const getThreadById = async (id) => {
@@ -48,4 +44,8 @@ export const updateThread = async (id, updatedThread) => {
   }
 
   return response.json();
+};
+
+export const deleteThread = async (id) => {
+  await fetch(`${API_URL}/${id}`, { method: "DELETE" });
 };
