@@ -1,30 +1,42 @@
-import { Link } from "react-router-dom";
-import { useEffect, useState } from "react";
-import { getAllThreads } from "../API";
-import ThreadItem from "../Components/ThreadItem";
+import React, { useEffect, useState } from "react";
+import { Link, useParams } from "react-router-dom";
+import { getThreadById } from "../API";
+
 export default function ThreadDetail() {
-      const [threads, setThread] = useState([]);
-    
-      useEffect(() => {
-        // Fetch trådar när komponenten laddas
-        getAllThreads().then((data) => {
-          setThread(data); // Sätt de hämtade trådarna i state
-        });
-      }, []); // Tomt beroende-array gör att det bara körs en gång
-    
-    return (
-        <div>
-            <h1>Thread</h1>
-                  <ul>
-                    {threads.length === 0 ? (
-                      <p>Inga trådar finns än.</p>
-                    ) : (
-                      threads.map((thread) => (
-                        <ThreadItem key={thread.id} thread={thread} />
-                      ))
-                    )}
-                  </ul>
-            <Link to={"/add-comment"}>+ Ny kommentar</Link>
-        </div>
-    );
+  const { id } = useParams(); // Hämtar trådens ID från URL:en
+
+  // State för enskild tråd
+  const [thread, setThread] = useState(null);
+
+  useEffect(() => {
+    async function fetchThread() {
+      try {
+        const data = await getThreadById(id); // Hämta tråd från API
+        setThread(data);
+      } catch (error) {
+        console.error("Kunde inte hämta tråden:", error);
+      }
+    }
+    fetchThread();
+  }, [id]);
+
+  if (!thread) {
+    return <p>Laddar tråd...</p>;
+  }
+
+  return (
+    <div>
+      <h1>{thread.title}</h1>
+      <p>{thread.content}</p>
+      <p>
+        <strong>Author:</strong> {thread.author}
+      </p>
+      <p>
+        <strong>Date:</strong> {thread.date}
+      </p>
+
+      <Link to={"/add-comment"}>+ Ny kommentar</Link>
+      <Link to={"/"}>Cancel</Link>
+    </div>
+  );
 }

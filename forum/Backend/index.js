@@ -9,7 +9,7 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-// Create a "tasks" table if it doesn't exist
+// Create a "thread" table if it doesn't exist
 db.prepare(
   `CREATE TABLE IF NOT EXISTS thread (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
