@@ -25,7 +25,14 @@ export const deleteThread = async (id) => {
 };
 
 export const getThreadById = async (id) => {
-  const response = await fetch(`${API_URL}/${id}`);
+  const response = await fetch(`http://localhost:3000/threads/${id}`);
+
+  if (!response.ok) {
+    throw new Error(
+      `Failed to fetch thread with id: ${id}, Status: ${response.status}`
+    );
+  }
+
   return response.json();
 };
 
@@ -37,7 +44,7 @@ export const updateThread = async (id, updatedThread) => {
   });
 
   if (!response.ok) {
-    throw new Error("Failed to update task");
+    throw new Error("Failed to update thread");
   }
 
   return response.json();

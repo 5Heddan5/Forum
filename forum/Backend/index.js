@@ -30,19 +30,25 @@ app.get("/threads", (req, res) => {
 // Route to update a task by ID
 app.put("/threads/:id", (req, res) => {
   const { id } = req.params;
-  const { thing } = req.body;
+  const { title, content, author, date } = req.body; 
 
-  // Update the task in the database
-  const stmt = db.prepare("UPDATE thread SET title = ? WHERE id = ?");
-  const result = stmt.run(thing, id);
+  if (!title || !content || !author || !date) {
+    return res.status(400).json({ error: "All fields are required" });
+  }
+
+  // Uppdatera tråden i databasen
+  const stmt = db.prepare(
+    "UPDATE thread SET title = ?, content = ?, author = ?, date = ? WHERE id = ?"
+  );
+  const result = stmt.run(title, content, author, date, id); 
 
   if (result.changes === 0) {
     return res.status(404).json({ error: "Thread not found" });
   }
 
-  // Fetch and return the updated task
-  const updatedTask = db.prepare("SELECT * FROM thread WHERE id = ?").get(id);
-  res.json(updatedTask);
+  // Hämta och returnera den uppdaterade tråden
+  const updatedThread = db.prepare("SELECT * FROM thread WHERE id = ?").get(id);
+  res.json(updatedThread);
 });
 
 // Route to add a task
@@ -90,4 +96,15 @@ app.delete("/threads/:id", (req, res) => {
 app.listen(3000, () => {
   console.log("Listening to port 3000");
   console.log("Server running on http://localhost:3000");
+});
+
+app.get("/threads/:id", (req, res) => {
+  const { id } = req.params; // Hämtar id från URL
+  const thread = db.prepare("SELECT * FROM thread WHERE id = ?").get(id);
+
+  if (!thread) {
+    return res.status(404).json({ error: "Thread not found" });
+  }
+
+  res.json(thread);
 });
