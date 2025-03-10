@@ -3,11 +3,13 @@ import { Link } from "react-router-dom";
 import { getAllThreads } from "../API";
 import ThreadItem from "../Components/ThreadItem";
 import Searchbar from "../Components/Searchbar";
+import SortDate from "../Components/SortDate";
 
 export default function HomeView() {
   const [threads, setThreads] = useState([]); // Alla trådar
   const [filteredThreads, setFilteredThreads] = useState([]); // Filtrerade trådar
   const [searchInput, setSearchInput] = useState(""); // Söksträng
+  const [sortOrder, setSortOrder] = useState("desc");
 
   useEffect(() => {
     // Hämta trådar när sidan laddas
@@ -32,6 +34,18 @@ export default function HomeView() {
     setFilteredThreads(filtered);
   };
 
+  // Hantera sortering
+  const handleSortChange = (e) => {
+    setSortOrder(e.target.value);
+  };
+
+  // Sortera trådar baserat på val
+  const sortedThreads = [...filteredThreads].sort((a, b) => {
+    const dateA = new Date(a.date);
+    const dateB = new Date(b.date);
+    return sortOrder === "asc" ? dateA - dateB : dateB - dateA;
+  });
+
   return (
     <div className="task-container">
       <div className="header">
@@ -43,16 +57,18 @@ export default function HomeView() {
           handleSearchChange={handleSearchChange}
         />
 
+        <SortDate sortOrder={sortOrder} onSortChange={handleSortChange} />
+
         <Link className="add-task-btn" to="/add-thread">
           + Ny tråd
         </Link>
       </div>
 
       <ul>
-        {filteredThreads.length === 0 ? (
+        {sortedThreads.length === 0 ? (
           <p>Inga trådar matchade din sökning.</p>
         ) : (
-          filteredThreads.map((thread) => (
+          sortedThreads.map((thread) => (
             <ThreadItem key={thread.id} thread={thread} />
           ))
         )}
