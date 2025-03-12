@@ -46,3 +46,19 @@ export const updateThread = async (id, updatedThread) => {
 
   return response.json();
 };
+
+export const getComments = async (threadId) => {
+  const response = await fetch(`${API_URL}/${threadId}/comments`);
+  if (!response.ok) throw new Error("Failed to fetch comments");
+  return response.json()
+};
+
+export const addComment = async (threadId, comment) => {
+  const response = await fetch(`${API_URL}/${threadId}/comments`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(comment),
+  });
+  if (!response.ok) throw new Error("Failed to add comment");
+  return response.json();
+};

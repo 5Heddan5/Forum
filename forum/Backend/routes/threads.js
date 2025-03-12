@@ -5,6 +5,8 @@ import {
   createThread,
   updateThread,
   deleteThread,
+  getCommentByThreadId,
+  createComment
 } from "../models/threadModel.js";
 import { validateThreadData } from "../middleware/validateThread.js";
 
@@ -55,5 +57,23 @@ router.delete("/:id", (req, res) => {
   }
   res.status(200).json({ message: "Thread deleted successfully" });
 });
+
+// Rutter för kommentarer
+router.get("/:id/comments", (req, res) => {
+  const comments = getCommentByThreadId(req.params.id);
+  res.json(comments);
+});
+
+router.post("/:id/comments", (req, res) => {
+  const {id} = req.params;
+  const {author, content, date} = req.body;
+
+  if (!author?.trim()|| !content?.trim()|| !date.trim()) {
+    return res.status(400).json({ error: "Author, content and date are required"});
+  }
+
+  const newComment = createComment(id, author, content, date);
+  res.status(201).json(newComment)
+})
 
 export default router;

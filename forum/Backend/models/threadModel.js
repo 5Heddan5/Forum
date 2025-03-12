@@ -37,17 +37,17 @@ export function deleteThread(id) {
 }
 
 // // Comments
-// export const getCommentByThreadId = (threadId) => {
-//   return db.prepare("SELECT * FROM comments WHERE thread_id = ?").all(threadId);
-// };
+export const getCommentByThreadId = (threadId) => {
+  return db.prepare("SELECT * FROM comments WHERE thread_id = ?").all(threadId);
+};
 
-// export const createComment = (threadId, author, comment, date) => {
-//   const stmt = db.prepare(
-//     "INSERT INTO comments WHERE (threadId, author, comment, date) VALUES (?, ?, ?, ?)"
-//   );
+export const createComment = (threadId, author, content, date) => {
+  const stmt = db.prepare(
+    "INSERT INTO comments (thread_id, author, content, date) VALUES (?, ?, ?, ?)"
+  );
 
-//   const result = stmt.run(threadId, author, comment, date);
-//   return db
-//     .prepare("SELECT * FROM comments WHERE comment_id = ?")
-//     .get(result.lastInsertRowid);
-// };
+  const result = stmt.run(threadId, author, content, date);
+  return db
+    .prepare("SELECT * FROM comments WHERE comment_id = ?")
+    .get(result.lastInsertRowid);
+};
