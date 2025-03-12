@@ -1,11 +1,10 @@
 import React from "react";
-
+import "./SortDate.css";
 const SortDate = ({ sortOrder, onSortChange }) => {
-  return( <div>
-    <label htmlFor="sort">Sortera efter datum:</label>
+  return( <div className="sort-date">
     <select id="sort" value={sortOrder} onChange={onSortChange}>
-        <option value="desc">Nyast först</option>
-        <option value="asc">Äldst först</option>
+        <option value="desc">Newest first</option>
+        <option value="asc">Oldest first</option>
     </select>
   </div>
   );

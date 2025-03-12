@@ -25,15 +25,11 @@ export default function ThreadDetail() {
   }
 
   return (
-    <div>
-      <h1>{thread.title}</h1>
+    <div className="thread-container">
+      <h3>{thread.title}</h3>
+      <p>{thread.author}</p>
+      <p>{thread.date}</p>
       <p>{thread.content}</p>
-      <p>
-        <strong>Author:</strong> {thread.author}
-      </p>
-      <p>
-        <strong>Date:</strong> {thread.date}
-      </p>
 
       <Link to={"/add-comment"}>+ Ny kommentar</Link>
       <Link to={"/"}>Cancel</Link>

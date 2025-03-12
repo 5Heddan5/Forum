@@ -1,0 +1,8 @@
+.thread-container {
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-left: 4px solid #f8c8dc;
+  margin-bottom: 15px;
+  border-radius: 10px;
+  transition: all 0.3s ease; /* Övergång för alla ändringar */
+}

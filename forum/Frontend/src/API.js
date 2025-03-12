@@ -20,6 +20,7 @@ export const getAllThreads = async () => {
   return response.json();
 };
 
+
 export const getThreadById = async (id) => {
   const response = await fetch(`http://localhost:3000/threads/${id}`);
 
@@ -44,8 +45,4 @@ export const updateThread = async (id, updatedThread) => {
   }
 
   return response.json();
-};
-
-export const deleteThread = async (id) => {
-  await fetch(`${API_URL}/${id}`, { method: "DELETE" });
 };

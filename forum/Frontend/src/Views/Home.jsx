@@ -28,7 +28,8 @@ export default function HomeView() {
       (thread) =>
         thread.title.toLowerCase().includes(searchTerm) ||
         thread.content.toLowerCase().includes(searchTerm) ||
-        thread.author.toLowerCase().includes(searchTerm)
+        thread.author.toLowerCase().includes(searchTerm) ||
+        thread.category.toLowerCase().includes(searchTerm)
     );
 
     setFilteredThreads(filtered);
@@ -47,26 +48,28 @@ export default function HomeView() {
   });
 
   return (
-    <div className="task-container">
+    <div className="thread-container">
       <div className="header">
-        <h1 className="header-title">Diskussionsforum</h1>
-        <h3>Dela idéer och diskutera olika ämnen med andra användare</h3>
+        <h1 className="header-title">Discussion Forum</h1>
+        <h3>Share ideas and discuss various topics with other users</h3>
 
-        <Searchbar
-          searchInput={searchInput}
-          handleSearchChange={handleSearchChange}
-        />
+        <div className="header-components">
+          <Searchbar
+            searchInput={searchInput}
+            handleSearchChange={handleSearchChange}
+          />
 
-        <SortDate sortOrder={sortOrder} onSortChange={handleSortChange} />
+          <SortDate sortOrder={sortOrder} onSortChange={handleSortChange} />
 
-        <Link className="add-task-btn" to="/add-thread">
-          + Ny tråd
-        </Link>
+          <Link className="add-task-btn" to="/add-thread">
+            Add new thread +
+          </Link>
+        </div>
       </div>
 
       <ul>
         {sortedThreads.length === 0 ? (
-          <p>Inga trådar matchade din sökning.</p>
+          <p>No threads in your search</p>
         ) : (
           sortedThreads.map((thread) => (
             <ThreadItem key={thread.id} thread={thread} />

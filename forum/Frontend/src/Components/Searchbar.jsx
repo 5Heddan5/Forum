@@ -5,7 +5,7 @@ const Searchbar = ({ searchInput, handleSearchChange }) => {
   return (
     <div>
       <TextField
-        label="Sök trådar..."
+        label="Type to serach"
         variant="outlined"
         value={searchInput}
         onChange={handleSearchChange}

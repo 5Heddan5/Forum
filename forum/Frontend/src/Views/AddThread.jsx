@@ -4,12 +4,14 @@ import { addThread } from "../API";
 
 export default function AddThreadView() {
   const [title, setTitle] = useState("");
+  const [category, setCategory] = useState("");
   const [content, setContent] = useState("");
   const [author, setAuthor] = useState("");
   const [date, setDate] = useState("");
   const navigate = useNavigate();
 
   const handleTitleChange = (e) => setTitle(e.target.value);
+  const handleCategoryChange = (e) => setCategory(e.target.value);
   const handleContentChange = (e) => setContent(e.target.value);
   const handleAuthorChange = (e) => setAuthor(e.target.value);
   const handleDateChange = (e) => setDate(e.target.value);
@@ -18,13 +20,13 @@ export default function AddThreadView() {
     e.preventDefault();
 
     // Kontrollera att alla fält är ifyllda
-    if (!title.trim() || !content.trim() || !author.trim() || !date.trim()) {
+    if (!title.trim() || !category.trim() || !content.trim() || !author.trim() || !date.trim() || !date.trim()) {
       return; // Om något fält är tomt, gör ingenting
     }
 
     try {
       // Lägg till tråden via API-anropet
-      await addThread({ title, content, author, date });
+      await addThread({ title, category, content, author, date });
 
       navigate("/"); // Om lyckad, navigera till hemsidan
     } catch (error) {
@@ -42,6 +44,13 @@ export default function AddThreadView() {
             value={title}
             onChange={handleTitleChange}
             placeholder="Enter title..."
+            required
+          />
+          <input
+            type="text"
+            value={category}
+            onChange={handleCategoryChange}
+            placeholder="Enter category..."
             required
           />
           <textarea

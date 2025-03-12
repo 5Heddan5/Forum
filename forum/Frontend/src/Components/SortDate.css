@@ -1,0 +1,16 @@
+.sort-date {
+  margin: 10px 0;
+}
+
+.sort-date select {
+  padding: 10px;
+  font-size: 14px;
+  border-radius: 4px;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  cursor: pointer;
+}
+
+.sort-date select:hover {
+  background-color: #f4f4f4;
+}

@@ -30,7 +30,7 @@ export default function EditThread() {
     }
 
     await updateThread(id, { title, content, author, date }); // Uppdatera tråden
-    navigate("/"); // 
+    navigate("/"); 
   };
 
   return (
