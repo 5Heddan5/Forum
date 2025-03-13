@@ -51,3 +51,26 @@ export const createComment = (threadId, author, content, date) => {
     .prepare("SELECT * FROM comments WHERE comment_id = ?")
     .get(result.lastInsertRowid);
 };
+
+// Lägg till dessa funktioner i threadModel.js
+
+export const updateComment = (commentId, author, content) => {
+  try {
+    const stmt = db.prepare(
+      "UPDATE comments SET author = ?, content = ? WHERE comment_id = ?"
+    );
+    const result = stmt.run(author, content, commentId);
+    return result.changes > 0
+      ? db.prepare("SELECT * FROM comments WHERE comment_id = ?").get(commentId)
+      : null;
+  } catch (error) {
+    console.error("Database error in updateComment:", error);
+    throw error; // Skicka felet vidare till rutten
+  }
+};
+
+export const deleteComment = (commentId) => {
+  const stmt = db.prepare("DELETE FROM comments WHERE comment_id = ?");
+  const result = stmt.run(commentId);
+  return result.changes > 0;
+};

@@ -20,7 +20,6 @@ export const getAllThreads = async () => {
   return response.json();
 };
 
-
 export const getThreadById = async (id) => {
   const response = await fetch(`http://localhost:3000/threads/${id}`);
 
@@ -50,7 +49,7 @@ export const updateThread = async (id, updatedThread) => {
 export const getComments = async (threadId) => {
   const response = await fetch(`${API_URL}/${threadId}/comments`);
   if (!response.ok) throw new Error("Failed to fetch comments");
-  return response.json()
+  return response.json();
 };
 
 export const addComment = async (threadId, comment) => {
@@ -60,5 +59,24 @@ export const addComment = async (threadId, comment) => {
     body: JSON.stringify(comment),
   });
   if (!response.ok) throw new Error("Failed to add comment");
+  return response.json();
+};
+
+export const updateComment = async (threadId, commentId, updatedComment) => {
+  const response = await fetch(`${API_URL}/${threadId}/comments/${commentId}`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(updatedComment),
+  });
+  if (!response.ok) throw new Error("Failed to update comment");
+  return response.json();
+};
+
+export const deleteComment = async (threadId, commentId) => {
+  const response = await fetch(`${API_URL}/${threadId}/comments/${commentId}`, {
+    method: "DELETE",
+    headers: { "Content-Type": "application/json" },
+  });
+  if (!response.ok) throw new Error("Failed to delete comment");
   return response.json();
 };

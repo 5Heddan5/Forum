@@ -6,7 +6,9 @@ import {
   updateThread,
   deleteThread,
   getCommentByThreadId,
-  createComment
+  createComment,
+  updateComment,
+  deleteComment
 } from "../models/threadModel.js";
 import { validateThreadData } from "../middleware/validateThread.js";
 
@@ -65,15 +67,42 @@ router.get("/:id/comments", (req, res) => {
 });
 
 router.post("/:id/comments", (req, res) => {
-  const {id} = req.params;
-  const {author, content, date} = req.body;
+  const { id } = req.params;
+  const { author, content, date } = req.body;
 
-  if (!author?.trim()|| !content?.trim()|| !date.trim()) {
-    return res.status(400).json({ error: "Author, content and date are required"});
+  if (!author?.trim() || !content?.trim() || !date.trim()) {
+    return res
+      .status(400)
+      .json({ error: "Author, content and date are required" });
   }
 
   const newComment = createComment(id, author, content, date);
-  res.status(201).json(newComment)
-})
+  res.status(201).json(newComment);
+});
 
 export default router;
+
+// Lägg till dessa rutter i router-objektet
+
+router.put("/:threadId/comments/:commentId", (req, res) => {
+  const { commentId } = req.params;
+  const { author, content } = req.body;
+
+  if (!author?.trim() || !content?.trim()) {
+    return res.status(400).json({ error: "Author and content are required" });
+  }
+
+  const updatedComment = updateComment(commentId, author, content);
+  if (!updatedComment) {
+    return res.status(404).json({ error: "Comment not found" });
+  }
+  res.json(updatedComment);
+});
+
+router.delete("/:threadId/comments/:commentId", (req, res) => {
+  const { commentId } = req.params;
+  if (!deleteComment(commentId)) {
+    return res.status(404).json({ error: "Comment not found" });
+  }
+  res.status(200).json({ message: "Comment deleted successfully" });
+});

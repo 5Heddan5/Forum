@@ -12,7 +12,7 @@ db.prepare(
     date TEXT NOT NULL,
     category TEXT NOT NULL
   )`
-).run;
+).run();
 
 db.prepare(`CREATE TABLE IF NOT EXISTS comments (
   comment_id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -21,6 +21,6 @@ db.prepare(`CREATE TABLE IF NOT EXISTS comments (
   content TEXT NOT NULL,
   date TEXT NOT NULL,
   FOREIGN KEY(thread_id) REFERENCES thread(id) ON DELETE CASCADE)`
-).run;
+).run();
 
 export default db;
