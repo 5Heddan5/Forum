@@ -1,8 +1,86 @@
-.thread-container {
-  padding: 10px;
-  border: 1px solid #ddd;
+body {
+  display: flex;
+  justify-content: center;
+  background-color: #f2f2f2;
+  font-family: Arial, sans-serif;
+}
+
+/* Form Styling */
+.edit-thread-form, .add-thread-form{
+  width: 500px;
+  padding: 20px;
   border-left: 4px solid #f8c8dc;
-  margin-bottom: 15px;
   border-radius: 10px;
-  transition: all 0.3s ease; /* Övergång för alla ändringar */
+  background-color: #fff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin: 2rem auto; 
+}
+
+/* Input Fields */
+.edit-input, .add-input {
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 16px;
+  background-color: #f9f9f9;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  width: 100%;
+}
+
+.edit-input:focus, .add-input:focus {
+  border-color: #ff85b3;
+  background-color: #fff;
+  outline: none;
+  box-shadow: 0 0 8px rgba(255, 133, 179, 0.4);
+}
+
+/* Textarea Styling */
+.edit-textarea, .add-textarea{
+  width: 100%;
+  padding: 10px;
+  margin-top: 10px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 16px;
+  background-color: #f9f9f9;
+  transition: all 0.3s ease;
+  min-height: 120px;
+  resize: vertical;
+}
+
+.edit-textarea:focus, .add-textarea:focus {
+  border-color: #f8c8dc;
+  background-color: #fff;
+  outline: none;
+  box-shadow: 0 0 5px rgba(248, 200, 220, 0.7);
+}
+
+/* Button Group */
+.button-group {
+  display: flex;
+  gap: 10px; /* Mellanrum mellan Save och Cancel */
+}
+
+/* Buttons Styling */
+.save-btn,
+.cancel-btn {
+  padding: 5px 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.save-btn:hover,
+.cancel-btn:hover {
+  background-color: white;
+  border-color: #f8c8dc;
+  color: #333;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }

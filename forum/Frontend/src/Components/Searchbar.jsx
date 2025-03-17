@@ -1,12 +1,12 @@
 import React from "react";
-import TextField from "@mui/material/TextField";
 
-const Searchbar = ({ searchInput, handleSearchChange }) => {
+const Searchbar = ({ searchInput, handleSearchChange, className }) => {
   return (
     <div>
-      <TextField
-        label="Type to serach"
-        variant="outlined"
+      <input
+        className={className}
+        type="text"
+        placeholder="Type to search"
         value={searchInput}
         onChange={handleSearchChange}
       />

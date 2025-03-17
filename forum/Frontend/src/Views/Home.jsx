@@ -55,11 +55,16 @@ export default function HomeView() {
 
         <div className="header-components">
           <Searchbar
+            className="search"
             searchInput={searchInput}
             handleSearchChange={handleSearchChange}
           />
 
-          <SortDate sortOrder={sortOrder} onSortChange={handleSortChange} />
+          <SortDate
+            className="date"
+            sortOrder={sortOrder}
+            onSortChange={handleSortChange}
+          />
 
           <Link className="add-task-btn" to="/add-thread">
             Add new thread +

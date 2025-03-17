@@ -1,3 +1,7 @@
+* {
+  box-sizing: border-box; /* Gör att padding och border inkluderas i height */
+}
+
 body {
   display: flex;
   justify-content: center;
@@ -22,8 +26,48 @@ h1 {
 }
 .header-components {
   display: flex;
+  align-items: center; 
+  gap: 10px; 
 }
 
-.sort-date {
-  color: pink;
+.search {
+  width: 200px;
+  border: 1px solid #f8c8dc;
+}
+
+.search:focus {
+  outline: none;
+  border-color: #f8c8dc;
+  box-shadow: 0 0 8px rgba(255, 133, 179, 0.6); 
+}
+.search::placeholder {
+  color: black; 
+  opacity: 1; 
+}
+
+
+.search, 
+.date, 
+.add-task-btn {
+  height: 40px; 
+  display: flex;
+  align-items: center;
+  padding: 8px;
+  font-size: 16px;
+  border-radius: 4px;
+}
+.date {
+  border: 1px solid #f8c8dc;
+  background-color: white;
+  cursor: pointer;
+}
+
+.add-task-btn {
+  background-color: white;
+  color: black;
+  text-decoration: none;
+  padding: 8px 12px;
+  border: none;
+  cursor: pointer;
+  border: 1px solid #f8c8dc;
 }

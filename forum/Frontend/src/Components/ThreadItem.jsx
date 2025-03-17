@@ -12,8 +12,6 @@ export default function ThreadItem({ thread }) {
       </div>
       <p className="thread-content">{thread.content}</p>
       <div className="thread-actions">
-        <Link to={`/add-response/${thread.id}`}>Add Response</Link>
-
         <div className="right-links">
           <Link to={`/view-thread/${thread.id}`}>View Thread</Link>
           <Link to={`/edit-thread/${thread.id}`} className="edit-button">

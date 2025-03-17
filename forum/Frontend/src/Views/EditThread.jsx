@@ -1,78 +1,47 @@
-import React, { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import { getThreadById, updateThread } from "../API";
+import ThreadForm from "../Components/ThreadEditForm";
 
-export default function EditThread() {
-  const { id } = useParams(); // Hämtar trådens ID från URL:en
-  const navigate = useNavigate();
+export default function EditThreadView() {
+  const { id } = useParams();
+  const [thread, setThread] = useState(null);
+  const navigate = useNavigate(); // Hook för navigering
 
-  // State för trådens innehåll
-  const [title, setTitle] = useState("");
-  const [content, setContent] = useState("");
-  const [author, setAuthor] = useState("");
-  const [date, setDate] = useState("");
-
+  // Effekt körs vid laddning eller när ID ändras
   useEffect(() => {
     async function fetchThread() {
-      const data = await getThreadById(id); // Hämta tråd från API
-      setTitle(data.title);
-      setContent(data.content);
-      setAuthor(data.author);
-      setDate(data.date);
+      try {
+        const fetchedThread = await getThreadById(id); // hämtar tråden från API baserat på ID
+        setThread(fetchedThread); // sparar hämtade tråden i state
+      } catch (error) {
+        console.error("Failed to fetch thread:", error);
+      }
     }
-    fetchThread();
-  }, [id]);
+    fetchThread(); // Anropar funktionen för att hämta tråden
+  }, [id]); // Körs om ID ändras
 
-  const handleUpdate = async () => {
-    if (!title.trim() || !content.trim() || !author.trim() || !date.trim()) {
-      alert("Alla fält måste vara ifyllda!");
-      return;
+  // Uppdaterar tråden
+  const handleUpdate = async (updatedThread) => {
+    try {
+      await updateThread(id, updatedThread); // Anropar API för att uppdatera tråden
+      navigate(`/`);
+    } catch (error) {
+      console.error("Error updating thread:", error);
     }
-
-    await updateThread(id, { title, content, author, date }); // Uppdatera tråden
-    navigate("/"); 
   };
 
   return (
     <div>
-      <h1>Edit Thread</h1>
-      <form
-        onSubmit={(e) => {
-          e.preventDefault();
-          handleUpdate();
-        }}
-      >
-        <input
-          type="text"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          placeholder="Title"
-          required
+      {thread ? (
+        <ThreadForm
+          initialData={thread}
+          onSubmit={handleUpdate}
+          onCancel={() => navigate(`/`)}
         />
-        <textarea
-          value={content}
-          onChange={(e) => setContent(e.target.value)}
-          placeholder="Content"
-          required
-        />
-        <input
-          type="text"
-          value={author}
-          onChange={(e) => setAuthor(e.target.value)}
-          placeholder="Author"
-          required
-        />
-        <input
-          type="date"
-          value={date}
-          onChange={(e) => setDate(e.target.value)}
-          required
-        />
-        <button type="submit">Update Thread</button>
-        <button type="button" onClick={() => navigate("/")}>
-          Cancel
-        </button>
-      </form>
+      ) : (
+        <p>Loading...</p>
+      )}
     </div>
   );
 }

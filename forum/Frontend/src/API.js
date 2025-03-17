@@ -1,37 +1,42 @@
-const API_URL = "http://localhost:3000/threads"; // Local API URL
+const API_URL = "http://localhost:3000/threads"; // Bas-URL för API:et
 
+// Skapa en ny tråd
 export const addThread = async (newThread) => {
-  const response = await fetch("http://localhost:3000/threads", {
+  const response = await fetch(`${API_URL}`, {
     method: "POST",
     headers: {
-      "Content-Type": "application/json",
+      "Content-Type": "application/json", // Specifierar att vi skickar JSON-data
     },
-    body: JSON.stringify(newThread),
+    body: JSON.stringify(newThread), // Omvandlar objektet till JSON-struktur
   });
 
   if (!response.ok) {
     throw new Error("Failed to add thread");
   }
 
-  return await response.json();
-};
-export const getAllThreads = async () => {
-  const response = await fetch(API_URL);
-  return response.json();
+  return await response.json(); // Returnerar den skapade tråden som JSON
 };
 
+// Hämtar alla trådar
+export const getAllThreads = async () => {
+  const response = await fetch(API_URL);
+  return response.json(); // Returnerar listan av trådar som JSON
+};
+
+// Hämta en enskild tråd via ID
 export const getThreadById = async (id) => {
-  const response = await fetch(`http://localhost:3000/threads/${id}`);
+  const response = await fetch(`${API_URL}/${id}`);
 
   if (!response.ok) {
     throw new Error(
       `Failed to fetch thread with id: ${id}, Status: ${response.status}`
-    );
+    ); // Felhantering om tråden inte kan hämtas
   }
 
   return response.json();
 };
 
+// Uppdatera en tråd
 export const updateThread = async (id, updatedThread) => {
   const response = await fetch(`${API_URL}/${id}`, {
     method: "PUT",
@@ -43,15 +48,18 @@ export const updateThread = async (id, updatedThread) => {
     throw new Error("Failed to update thread");
   }
 
-  return response.json();
+  return response.json(); // Returnerar den uppdaterade tråden
 };
 
+// Kommentarer
+// Hämtar alla kommentarer för en tråd
 export const getComments = async (threadId) => {
   const response = await fetch(`${API_URL}/${threadId}/comments`);
   if (!response.ok) throw new Error("Failed to fetch comments");
   return response.json();
 };
 
+// Skapar en ny kommentar
 export const addComment = async (threadId, comment) => {
   const response = await fetch(`${API_URL}/${threadId}/comments`, {
     method: "POST",
@@ -62,6 +70,7 @@ export const addComment = async (threadId, comment) => {
   return response.json();
 };
 
+// Uppdatera en kommentar
 export const updateComment = async (threadId, commentId, updatedComment) => {
   const response = await fetch(`${API_URL}/${threadId}/comments/${commentId}`, {
     method: "PUT",
@@ -72,6 +81,7 @@ export const updateComment = async (threadId, commentId, updatedComment) => {
   return response.json();
 };
 
+// Ta bort en kommentar
 export const deleteComment = async (threadId, commentId) => {
   const response = await fetch(`${API_URL}/${threadId}/comments/${commentId}`, {
     method: "DELETE",

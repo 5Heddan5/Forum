@@ -1,34 +1,15 @@
-import { useState } from "react";
+// views/AddThreadView.js
 import { useNavigate } from "react-router-dom";
 import { addThread } from "../API";
+import ThreadForm from "../Components/ThreadForm";
 
 export default function AddThreadView() {
-  const [title, setTitle] = useState("");
-  const [category, setCategory] = useState("");
-  const [content, setContent] = useState("");
-  const [author, setAuthor] = useState("");
-  const [date, setDate] = useState("");
   const navigate = useNavigate();
 
-  const handleTitleChange = (e) => setTitle(e.target.value);
-  const handleCategoryChange = (e) => setCategory(e.target.value);
-  const handleContentChange = (e) => setContent(e.target.value);
-  const handleAuthorChange = (e) => setAuthor(e.target.value);
-  const handleDateChange = (e) => setDate(e.target.value);
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    // Kontrollera att alla fält är ifyllda
-    if (!title.trim() || !category.trim() || !content.trim() || !author.trim() || !date.trim() || !date.trim()) {
-      return; // Om något fält är tomt, gör ingenting
-    }
-
+  const handleSubmit = async (newThread) => {
     try {
-      // Lägg till tråden via API-anropet
-      await addThread({ title, category, content, author, date });
-
-      navigate("/"); // Om lyckad, navigera till hemsidan
+      await addThread(newThread);
+      navigate("/"); // Gå tillbaka till startsidan efter att ha lagt till tråden
     } catch (error) {
       console.error("Error adding thread:", error);
     }
@@ -36,50 +17,7 @@ export default function AddThreadView() {
 
   return (
     <div>
-      <div className="thread-container">
-        <h1>Add Thread</h1>
-        <form onSubmit={handleSubmit}>
-          <input
-            type="text"
-            value={title}
-            onChange={handleTitleChange}
-            placeholder="Enter title..."
-            required
-          />
-          <input
-            type="text"
-            value={category}
-            onChange={handleCategoryChange}
-            placeholder="Enter category..."
-            required
-          />
-          <textarea
-            value={content}
-            onChange={handleContentChange}
-            placeholder="Enter content..."
-            required
-          />
-          <input
-            type="text"
-            value={author}
-            onChange={handleAuthorChange}
-            placeholder="Enter author..."
-            required
-          />
-          <input
-            type="date"
-            value={date}
-            onChange={handleDateChange}
-            required
-          />
-          <div className="button-group">
-            <button type="submit">Add Thread</button>
-            <button type="button" onClick={() => navigate("/")}>
-              Cancel
-            </button>
-          </div>
-        </form>
-      </div>
+      <ThreadForm onSubmit={handleSubmit} onCancel={() => navigate("/")} />
     </div>
   );
 }

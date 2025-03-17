@@ -7,163 +7,113 @@ import {
   updateComment,
   deleteComment,
 } from "../API";
+import CommentForm from "../components/CommentForm";
+import CommentItem from "../components/CommentItem";
 
 export default function ThreadDetail() {
-  const { id } = useParams();
+  const { id } = useParams(); // hämtar trådens ID från URL
+  // Staet för att lagra tråden och dess kommentarer
   const [thread, setThread] = useState(null);
   const [comments, setComments] = useState([]);
   const [showCommentForm, setShowCommentForm] = useState(false);
-  const [commentAuthor, setCommentAuthor] = useState("");
-  const [commentContent, setCommentContent] = useState("");
-  const [editingCommentId, setEditingCommentId] = useState(null);
-  const [editAuthor, setEditAuthor] = useState("");
-  const [editContent, setEditContent] = useState("");
 
+  // Hämtar tråden och dess kommentarer vid sidladdning eller om ID ändras
   useEffect(() => {
     async function fetchThread() {
       try {
-        const data = await getThreadById(id); // Hämta tråd från API
-        setThread(data);
+        const data = await getThreadById(id);
+        setThread(data); // Sätter den hämtade tråden i state
 
         const commentsData = await getComments(id);
-        setComments(commentsData);
+        setComments(commentsData); // Sätter de hämtade kommentarernai state
+
       } catch (error) {
         console.error("Kunde inte hämta tråden:", error);
       }
     }
     fetchThread();
-  }, [id]);
+  }, [id]); // Körs igen om ID ändras
 
-  const handleCommentSubmit = async (e) => {
-    e.preventDefault();
-    const newComment = {
-      author: commentAuthor,
-      content: commentContent,
-      // Formatera datumet som "YYYY-MM-DD"
-      date: new Date().toLocaleDateString("sv-SE"), // 'sv-SE' ger formatet YYYY-MM-DD
-    };
-
+  // Hanterar inlämning av en ny kommentar
+  const handleCommentSubmit = async (newComment) => {
     try {
       const addedComment = await addComment(id, newComment);
-      setComments([...comments, addedComment]);
-      setCommentAuthor("");
-      setCommentContent("");
-      setShowCommentForm(false); // Dölj formuläret
+      setComments([...comments, addedComment]); // Lägger till den nya kommentaren i listan 
     } catch (error) {
       console.log("Couldn't add comment:", error);
     }
   };
-  const handleEditClick = (comment) => {
-    setEditingCommentId(comment.comment_id);
-    setEditAuthor(comment.author);
-    setEditContent(comment.content);
-  };
 
-  const handleEditSubmit = async (e, commentId) => {
-    e.preventDefault();
-    const updatedComment = {
-      author: editAuthor,
-      content: editContent,
-    };
-
+  // Hanterar uppdatering av kommentarer
+  const handleEditComment = async (updatedComment) => {
     try {
-      const updated = await updateComment(id, commentId, updatedComment);
-      setComments(
-        comments.map((c) => (c.comment_id === commentId ? updated : c))
+      const updated = await updateComment(
+        id,
+        updatedComment.comment_id, // Använder kommentarens ID för att identifiera
+        updatedComment
       );
-      setEditingCommentId(null);
-      setEditAuthor("");
-      setEditContent("");
+      setComments( // Uppdaterar listan med kommentarer
+        comments.map((c) => (c.comment_id === updated.comment_id ? updated : c))
+      );
     } catch (error) {
       console.error("Failed to update comment:", error);
     }
   };
 
+  // hanterar delete av en en kommentar
   const handleDelete = async (commentId) => {
     if (window.confirm("Are you sure you want to delete this comment?")) {
       try {
         await deleteComment(id, commentId);
+        // filtrerar bort den raderade kommentaren från llistan
         setComments(comments.filter((c) => c.comment_id !== commentId));
       } catch (error) {
         console.error("Failed to delete comment:", error);
       }
     }
   };
-
+  // Laddningstext
   if (!thread) {
-    return <p>Laddar tråd...</p>;
+    return <p>Loading...</p>;
   }
 
   return (
-    <div className="thread-container">
-      <h3>{thread.title}</h3>
-      <p>{thread.author}</p>
-      <p>{thread.date}</p>
-      <p>{thread.content}</p>
-      <button onClick={() => setShowCommentForm(!showCommentForm)}>
-        {showCommentForm ? "Hide comments" : "+ New comment"} {/* Fixad text */}
-      </button>
-      <Link to={"/"}>Cancel</Link>
+    <div className="thread-detail-container">
+      <div className="thread-item">
+        <h3 className="thread-title">{thread.title}</h3>
+        <p className="thread-author">
+          {thread.author} - {thread.date}
+        </p>
+        <p className="thread-content">{thread.content}</p>
+        <div className="thread-actions">
 
-      {showCommentForm && (
-        <form onSubmit={handleCommentSubmit}>
-          <input
-            type="text"
-            placeholder="Name"
-            value={commentAuthor}
-            onChange={(e) => setCommentAuthor(e.target.value)}
-            required
-          />
-          <textarea
-            placeholder="Write Comment"
-            value={commentContent}
-            onChange={(e) => setCommentContent(e.target.value)}
-            required
-          />
-          <button type="submit">Upload comment</button>
-        </form>
-      )}
-      <h4>Comments</h4>
+          <button
+            className="action-btn"
+            onClick={() => setShowCommentForm(!showCommentForm)} // Ändrar state för showCommentForm, formuläret visas när knappen klickas och döljs
+          >
+            {showCommentForm ? "Hide comments" : "+ New comment"}
+          </button>
+          <Link to="/" className="action-btn cancel-btn">
+            Cancel
+          </Link>
+        </div>
+      </div>
+
+      {/* && används för att visa CommentForm om det är true. CommentForm skickar en ny kommentar till handleCommentSubmit*/}
+      {showCommentForm && <CommentForm onCommentSubmit={handleCommentSubmit} />}
+
+      <h4 className="comments-title">Comments</h4>
       {comments.length === 0 ? (
         <p>No comments yet</p>
       ) : (
-        <ul>
+        <ul className="comment-list">
           {comments.map((comment) => (
-            <li key={comment.comment_id}>
-              {editingCommentId === comment.comment_id ? (
-                <form onSubmit={(e) => handleEditSubmit(e, comment.comment_id)}>
-                  <input
-                    type="text"
-                    value={editAuthor}
-                    onChange={(e) => setEditAuthor(e.target.value)}
-                    required
-                  />
-                  <textarea
-                    value={editContent}
-                    onChange={(e) => setEditContent(e.target.value)}
-                    required
-                  />
-                  <button type="submit">Save</button>
-                  <button
-                    type="button"
-                    onClick={() => setEditingCommentId(null)}
-                  >
-                    Cancel
-                  </button>
-                </form>
-              ) : (
-                <>
-                  <p>{comment.content}</p>
-                  <p>
-                    Av: {comment.author} - {comment.date}
-                  </p>
-                  <button onClick={() => handleEditClick(comment)}>Edit</button>
-                  <button onClick={() => handleDelete(comment.comment_id)}>
-                    Delete
-                  </button>
-                </>
-              )}
-            </li>
+            <CommentItem
+              key={comment.comment_id}
+              comment={comment}
+              onEdit={handleEditComment}
+              onDelete={handleDelete}
+            />
           ))}
         </ul>
       )}
